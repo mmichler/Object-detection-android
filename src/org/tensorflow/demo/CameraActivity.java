@@ -54,7 +54,8 @@ public abstract class CameraActivity extends Activity
   private static final String PERMISSION_CAMERA = Manifest.permission.CAMERA;
   private static final String PERMISSION_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-  private boolean debug = false;
+  // Phase 0
+  private boolean debug = true;
 
   private Handler handler;
   private HandlerThread handlerThread;

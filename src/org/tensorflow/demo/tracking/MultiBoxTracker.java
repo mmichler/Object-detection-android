@@ -24,18 +24,18 @@ import android.graphics.Paint.Cap;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+
 import org.tensorflow.demo.Classifier.Recognition;
 import org.tensorflow.demo.env.BorderedText;
 import org.tensorflow.demo.env.ImageUtils;
 import org.tensorflow.demo.env.Logger;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 import static android.text.TextUtils.substring;
 
@@ -177,6 +177,7 @@ public class MultiBoxTracker {
             (int) (multiplier * (rotated ? frameWidth : frameHeight)),
             sensorOrientation,
             false);
+
     for (final TrackedRecognition recognition : trackedObjects) {
       final RectF trackedPos =
           (objectTracker != null)
@@ -188,7 +189,6 @@ public class MultiBoxTracker {
 
       if(recognition.title.equals("Roboter")){
         boxPaint.setColor(Color.rgb(135,206,250));
-
       }
       else if(recognition.title.equals("NIO")){
         boxPaint.setColor(Color.RED);
@@ -215,7 +215,10 @@ public class MultiBoxTracker {
         borderedText.drawText1(canvas, trackedPos.left+10 , trackedPos.bottom+60, substring(String.format("%.3f",100* recognition.detectionConfidence),0,2)+"%",boxPaint.getColor());
 
       }
-
+      // Phase 2
+      else if(recognition.title.equals("None")) {
+        borderedText.drawText(canvas, 50, 90, String.format("%s", "No object recognized"), Color.LTGRAY);
+      }
 
     }
   }
@@ -300,6 +303,13 @@ public class MultiBoxTracker {
 
     if (rectsToTrack.isEmpty()) {
       logger.v("Nothing to track, aborting.");
+      // Phase 1
+      trackedObjects.clear();
+      // Phase 2
+      TrackedRecognition emptyRecognition = new TrackedRecognition();
+      emptyRecognition.title = "None";
+      emptyRecognition.color = Color.LTGRAY;
+      trackedObjects.add(emptyRecognition);
       return;
     }
 
